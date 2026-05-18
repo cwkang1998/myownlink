@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shorturl: one
+  geolocation: MyText
+  timestamp: 2026-05-18 17:57:48
+
+two:
+  shorturl: two
+  geolocation: MyText
+  timestamp: 2026-05-18 17:57:48

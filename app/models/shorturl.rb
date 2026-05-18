@@ -1,0 +1,2 @@
+class Shorturl < ApplicationRecord
+end

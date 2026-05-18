@@ -7,9 +7,9 @@ Myownlink is a url shortener service intended to accept a target URL, generate a
 - Ruby 3.4.9
 - Rails 8.1.3
 - Bundler / RubyGems
-- Docker
+- PostgreSQL 18, or Docker for the local Postgres container
 
-The app uses the default Rails 8 stack with Propshaft, Importmap, Turbo, Stimulus, Tailwind CSS, Puma, Solid Cache, Solid Queue, and Solid Cable.
+The app uses the default Rails 8 stack with PostgreSQL, Propshaft, Importmap, Turbo, Stimulus, Tailwind CSS, Puma, Solid Cache, Solid Queue, and Solid Cable.
 
 ## Guide
 
@@ -22,6 +22,7 @@ bundle install
 Prepare the database:
 
 ```sh
+docker compose -f docker-compose.local.yml up -d postgres
 bin/rails db:prepare
 ```
 
@@ -41,11 +42,21 @@ http://localhost:3000
 
 ## Configuration
 
-This project uses SQLite by default. Development and test databases are stored under `storage/`.
+This project uses PostgreSQL by default. For local development, `docker-compose.local.yml` starts a Postgres container with these defaults:
 
-No external services are required for local development at this stage. Production deployment requires a valid Rails master key:
+```text
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=myownlink
+POSTGRES_PASSWORD=password
+POSTGRES_DB=myownlink_development
+POSTGRES_TEST_DB=myownlink_test
+```
+
+Production deployment requires `DATABASE_URL` and a valid Rails master key:
 
 ```sh
+DATABASE_URL=postgres://user:password@host:5432/myownlink_production
 RAILS_MASTER_KEY=your_master_key
 ```
 
@@ -79,4 +90,3 @@ The CI script runs setup, RuboCop, bundler-audit, importmap audit, Brakeman, Rai
 
 - Assignment requirements: `docs/REQUIREMENTS.md`
 - Solution wiki: `docs/WIKI.md`
-
