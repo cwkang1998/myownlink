@@ -23,9 +23,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="flex min-h-screen flex-col bg-app-canvas text-app-foreground antialiased">
+    <%= render "shared/header" %>
+
+    <main class="container mx-auto mt-10 flex flex-1 px-5">
       <%= yield %>
     </main>
+
+    <%= render "shared/footer" %>
   </body>
 </html>
