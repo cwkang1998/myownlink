@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_18_095748) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_073919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,11 +25,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_095748) do
 
   create_table "shorturls", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "short_url_code", limit: 15
     t.string "target_url"
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index ["short_url_code"], name: "index_shorturls_on_short_url_code", unique: true
   end
 
   add_foreign_key "shorturl_accesses", "shorturls"

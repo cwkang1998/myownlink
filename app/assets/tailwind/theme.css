@@ -13,6 +13,9 @@
   --color-app-primary-hover: #19412d;
   --color-app-primary-foreground: #ffffff;
   --color-app-focus: #4bcc00;
+  --color-app-error: #dc2626;
+  --color-app-error-surface: #fef2f2;
+  --color-app-error-border: #fecaca;
 
   --radius-app: 0.5rem;
   --shadow-app-card: 0 1px 2px 0 rgb(13 18 23 / 0.06), 0 1px 3px 0 rgb(13 18 23 / 0.08);

@@ -34,10 +34,36 @@ class Base62Test < ActiveSupport::TestCase
     assert_equal "number must be non-negative", error.message
   end
 
+  test "encodes largest supported integer" do
+    encoded = Base62.encode(Base62::MAX_SUPPORTED_INT - 1)
+
+    assert_equal Base62::MAX_LENGTH, encoded.length
+    assert_equal Base62::MAX_SUPPORTED_INT - 1, Base62.decode(encoded)
+  end
+
+  test "rejects integers that exceed max length" do
+    error = assert_raises(ArgumentError) { Base62.encode(Base62::MAX_SUPPORTED_INT) }
+
+    assert_equal "number is too large, must be less than #{Base62::MAX_SUPPORTED_INT}", error.message
+  end
+
   test "rejects blank strings" do
     error = assert_raises(ArgumentError) { Base62.decode("") }
 
     assert_equal "value must not be blank", error.message
+  end
+
+  test "decodes max length strings" do
+    value = "1" * Base62::MAX_LENGTH
+
+    assert_equal value, Base62.encode(Base62.decode(value))
+  end
+
+  test "rejects strings that exceed max length" do
+    value = "1" * (Base62::MAX_LENGTH + 1)
+    error = assert_raises(ArgumentError) { Base62.decode(value) }
+
+    assert_equal "value must have length less than #{Base62::MAX_LENGTH} characters", error.message
   end
 
   test "rejects invalid base62 characters" do

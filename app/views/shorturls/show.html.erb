@@ -1,0 +1,16 @@
+<% content_for :title, "Short URL Details" %>
+<% content_for :page_title, "Short URL details" %>
+
+<section class="w-full">
+  <div class="mx-auto max-w-3xl">
+    <div class="mb-8 flex justify-end">
+      <%= link_to "Dashboard", root_path, class: "rounded-app border border-app-border px-4 py-2 text-sm font-medium text-app-muted-foreground hover:bg-app-surface-muted" %>
+    </div>
+
+    <div class="rounded-app border border-app-border bg-app-surface p-6 shadow-app-card">
+      <p class="text-base font-medium text-app-foreground"><%= @shorturl.title %></p>
+      <p class="mt-1 truncate text-sm text-app-muted-foreground"><%= full_short_url(@shorturl) %></p>
+      <p class="mt-1 truncate text-sm text-app-muted-foreground"><%= @shorturl.target_url %></p>
+    </div>
+  </div>
+</section>

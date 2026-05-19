@@ -1,0 +1,15 @@
+<% variant = local_assigns.fetch(:variant, :primary) %>
+
+<% button_classes =
+  case variant.to_sym
+  when :secondary
+    "rounded-app border border-app-border px-4 py-2 text-md font-medium text-app-muted-foreground hover:bg-app-surface-muted"
+  else
+    "rounded-app bg-app-primary px-4 py-2 text-md font-semibold text-app-primary-foreground shadow-sm hover:bg-app-primary-hover"
+  end
+%>
+
+
+<div class="mb-8 flex justify-end">
+    <%= link_to text, navigate_to, class: button_classes %>
+</div>
