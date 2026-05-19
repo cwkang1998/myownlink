@@ -41,18 +41,45 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select ".text-app-error", text: /Unable to create short URL/
-    assert_select ".text-app-error", text: /Title can't be blank/
-    assert_select ".text-app-error", text: /Target url must be a valid URL/
+    assert_select ".text-red-700", text: /Unable to create short URL/
+    assert_select ".text-red-700", text: /Title can't be blank/
+    assert_select ".text-red-700", text: /Target url must be a valid URL/
   end
 
   test "show renders shorturl details" do
     shorturl = shorturls(:one)
+    access = shorturl_accesses(:one)
 
     get shorturl_url(shorturl)
 
     assert_response :success
     assert_includes response.body, shorturl.title
     assert_includes response.body, shorturl.target_url
+    assert_includes response.body, redirect_shorturl_url(shorturl.short_url_code)
+    assert_select "#vistor_count", { text: "1" }
+    assert_select "th", text: "Timestamp"
+    assert_select "td", text: access.timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
+    assert_select "th", text: "Geolocation"
+    assert_select "td", text: access.geolocation
+  end
+
+  test "redirect_shorturl redirects to target url" do
+    shorturl = shorturls(:one)
+
+    assert_difference -> { ShorturlAccess.count }, 1 do
+      get redirect_shorturl_url(shorturl.short_url_code)
+    end
+
+    assert_redirected_to shorturl.target_url
+  end
+
+  test "redirect_shorturl renders not found for missing shorturl" do
+    missing_code = Base62.encode(Shorturl.maximum(:id) + 1)
+
+    assert_no_difference -> { ShorturlAccess.count } do
+      get redirect_shorturl_url(missing_code)
+    end
+
+    assert_response :not_found
   end
 end

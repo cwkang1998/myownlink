@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_19_073919) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_142056) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "shorturl_accesses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "geolocation"
+    t.string "ip"
+    t.string "referer"
     t.bigint "shorturl_id", null: false
     t.datetime "timestamp"
     t.datetime "updated_at", null: false

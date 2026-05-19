@@ -4,14 +4,13 @@ Rails.application.routes.draw do
 
   resources :shorturls, only: [ :new, :create, :show ]
 
-  # Shorturl redirection
-  get "s/:code", to: "shorturls#redirect_shorturl", as: :redirect_shorturl
+
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Shorturl redirection. This should be the last in order to prevent
+  # resolving to this routes for non-shorturls
+  get "/:code", to: "shorturls#redirect_shorturl", as: :redirect_shorturl, constraints: { code: /[0-9A-Za-z]{1,15}/ }
 end
