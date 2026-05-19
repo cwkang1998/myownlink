@@ -1,0 +1,42 @@
+<%
+  label = local_assigns.fetch(:label)
+  value = local_assigns.fetch(:value)
+  href = local_assigns.fetch(:href, value)
+%>
+
+<div class="space-y-2">
+  <p class="text-sm font-medium text-slate-600"><%= label %></p>
+
+  <div
+    class="inline-flex max-w-full overflow-hidden rounded-full border border-emerald-200 bg-emerald-50 shadow-sm"
+    data-controller="clipboard"
+    data-clipboard-text-value="<%= value %>"
+  >
+    <%= link_to value,
+      href,
+      class: "min-w-0 flex-1 truncate px-4 py-2 text-sm font-medium text-slate-900 hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500",
+      target: "_blank",
+      rel: "noopener noreferrer" %>
+
+    <button
+      type="button"
+      class="group relative inline-flex items-center justify-center border-l border-emerald-200 px-3 py-2 text-emerald-700 hover:bg-emerald-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      data-action="clipboard#copy"
+      aria-label="Copy <%= label.downcase %>"
+    >
+      <svg data-clipboard-target="copyIcon" aria-hidden="true" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h6A1.5 1.5 0 0 1 16 3.5v8a1.5 1.5 0 0 1-1.5 1.5h-6A1.5 1.5 0 0 1 7 11.5v-8Z" />
+        <path d="M4 6.5A1.5 1.5 0 0 1 5.5 5H6v6.5A2.5 2.5 0 0 0 8.5 14H13v.5a1.5 1.5 0 0 1-1.5 1.5h-6A1.5 1.5 0 0 1 4 14.5v-8Z" />
+      </svg>
+      <svg data-clipboard-target="checkIcon" aria-hidden="true" class="hidden h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M16.704 5.296a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0L3.296 9.216A1 1 0 0 1 4.71 7.802l4.037 4.037 6.543-6.543a1 1 0 0 1 1.414 0Z" clip-rule="evenodd" />
+      </svg>
+      <span
+        data-clipboard-target="tooltip"
+        class="pointer-events-none absolute bottom-full right-0 mb-2 translate-y-1 rounded-md bg-slate-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-sm transition duration-150"
+      >
+        Copied
+      </span>
+    </button>
+  </div>
+</div>

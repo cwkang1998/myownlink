@@ -6,47 +6,47 @@
   <div class="mx-auto max-w-3xl">
     <%= render "shared/actionbar", text: "Back to Dashboard", navigate_to: root_path, variant: :secondary %>
 
-    <div class="rounded-app border border-app-border bg-app-surface p-6 shadow-app-card">
+    <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <% if shorturl.errors.any? %>
-        <div class="mb-6 rounded-app border border-app-error-border bg-app-error-surface px-4 py-3">
-          <p class="text-sm font-medium text-app-error">
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-medium text-red-700">
             Unable to create short URL.
           </p>
           <% shorturl.errors.full_messages_for(:base).each do |message| %>
-            <p class="mt-2 text-sm text-app-error"><%= message %></p>
+            <p class="mt-2 text-sm text-red-700"><%= message %></p>
           <% end %>
         </div>
       <% end %>
 
       <%= form_with model: shorturl, url: shorturls_path, method: :post, scope: :shorturl, class: "space-y-6" do |form| %>
         <div>
-          <%= form.label :title, "Title", class: "block text-sm font-medium text-app-foreground" %>
+          <%= form.label :title, "Title", class: "block text-sm font-medium text-slate-700" %>
           <%= form.text_field :title,
             placeholder: "CoinGecko",
             autocomplete: "off",
             aria: { invalid: shorturl.errors[:title].any? },
-            class: "mt-2 block w-full rounded-app border border-app-input px-3 py-2 text-app-foreground shadow-sm outline-none placeholder:text-app-placeholder focus:border-app-focus focus:ring-2 focus:ring-app-focus/10" %>
+            class: "mt-2 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" %>
           <% shorturl.errors.full_messages_for(:title).each do |message| %>
-            <p class="mt-2 text-sm text-app-error"><%= message %></p>
+            <p class="mt-2 text-sm text-red-700"><%= message %></p>
           <% end %>
         </div>
 
         <div>
-          <%= form.label :target_url, "Target URL", class: "block text-sm font-medium text-app-foreground" %>
+          <%= form.label :target_url, "Target URL", class: "block text-sm font-medium text-slate-700" %>
           <%= form.url_field :target_url,
             placeholder: "https://www.coingecko.com",
             required: true,
             autocomplete: "url",
             aria: { invalid: shorturl.errors[:target_url].any? },
-            class: "mt-2 block w-full rounded-app border border-app-input px-3 py-2 text-app-foreground shadow-sm outline-none placeholder:text-app-placeholder focus:border-app-focus focus:ring-2 focus:ring-app-focus/10" %>
+            class: "mt-2 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" %>
           <% shorturl.errors.full_messages_for(:target_url).each do |message| %>
-            <p class="mt-2 text-sm text-app-error"><%= message %></p>
+            <p class="mt-2 text-sm text-red-700"><%= message %></p>
           <% end %>
         </div>
 
-        <div class="flex items-center justify-end gap-3 border-t border-app-border pt-6">
-          <%= link_to "Cancel", root_url, class: "rounded-app px-4 py-2 text-sm font-medium text-app-muted-foreground hover:bg-app-surface-muted" %>
-          <%= form.submit "Create", class: "rounded-app bg-app-primary px-4 py-2 text-sm font-semibold text-app-primary-foreground shadow-sm hover:bg-app-primary-hover" %>
+        <div class="flex items-center justify-end gap-3 border-t border-slate-200 pt-6">
+          <%= link_to "Cancel", root_url, class: "rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100" %>
+          <%= form.submit "Create", class: "rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700" %>
         </div>
       <% end %>
     </div>

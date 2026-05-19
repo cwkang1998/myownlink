@@ -5,25 +5,25 @@
   <div class="mx-auto max-w-5xl">
     <%= render "shared/actionbar", text: "Create short URL", navigate_to: new_shorturl_url%>
 
-    <div class="overflow-hidden rounded-app border border-app-border bg-app-surface shadow-app-card">
+    <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <% if @shorturls.present? %>
-        <ul class="divide-y divide-app-border">
+        <ul class="divide-y divide-slate-200">
           <% @shorturls.each do |shorturl| %>
             <li>
-              <%= link_to shorturl_path(shorturl), class: "block px-5 py-4 hover:bg-app-surface-muted" do %>
-              <p class="text-base font-medium text-app-foreground"><%= shorturl.title %></p>
+              <%= link_to shorturl_path(shorturl), class: "block px-5 py-4 hover:bg-emerald-50" do %>
+              <p class="text-base font-medium text-slate-900"><%= shorturl.title %></p>
                 <p class="mt-1 truncate
-                 text-sm text-app-muted-foreground"><%= full_short_url(shorturl) %></p>
+                 text-sm text-emerald-700"><%= full_short_url(shorturl) %></p>
                 <p class="mt-1 truncate
-                 text-sm text-app-muted-foreground"><%= shorturl.target_url %></p>
+                 text-sm text-slate-500"><%= shorturl.target_url %></p>
               <% end %>
             </li>
           <% end %>
         </ul>
       <% else %>
         <div class="px-5 py-12 text-center">
-          <p class="text-base font-medium text-app-foreground">No short URLs yet</p>
-          <p class="mt-1 text-sm text-app-muted-foreground">Create one to see it listed here.</p>
+          <p class="text-base font-medium text-slate-900">No short URLs yet</p>
+          <p class="mt-1 text-sm text-slate-500">Create one to see it listed here.</p>
         </div>
       <% end %>
     </div>

@@ -1,15 +1,23 @@
 <% variant = local_assigns.fetch(:variant, :primary) %>
+<% wrapper_classes = local_assigns.fetch(:wrapper_classes, "mb-8 flex justify-end") %>
 
 <% button_classes =
   case variant.to_sym
   when :secondary
-    "rounded-app border border-app-border px-4 py-2 text-md font-medium text-app-muted-foreground hover:bg-app-surface-muted"
+    "inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-900 hover:bg-slate-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
   else
-    "rounded-app bg-app-primary px-4 py-2 text-md font-semibold text-app-primary-foreground shadow-sm hover:bg-app-primary-hover"
+    "rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
   end
 %>
 
 
-<div class="mb-8 flex justify-end">
-    <%= link_to text, navigate_to, class: button_classes %>
+<div class="<%= wrapper_classes %>">
+  <%= link_to navigate_to, class: button_classes do %>
+    <% if variant.to_sym == :secondary %>
+      <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M17 10a1 1 0 0 1-1 1H6.414l3.293 3.293a1 1 0 0 1-1.414 1.414l-5-5a1 1 0 0 1 0-1.414l5-5a1 1 0 1 1 1.414 1.414L6.414 9H16a1 1 0 0 1 1 1Z" clip-rule="evenodd" />
+      </svg>
+    <% end %>
+    <span><%= text %></span>
+  <% end %>
 </div>
