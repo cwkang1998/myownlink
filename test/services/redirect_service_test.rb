@@ -63,4 +63,16 @@ class RedirectServiceTest < ActiveSupport::TestCase
       assert_nil result.resolved_target_url
     end
   end
+
+  test "returns failure for oversized decoded short code without recording access" do
+    request = Request.new("203.0.113.10", "203.0.113.10", nil)
+    oversized_code = "z" * Base62::MAX_LENGTH
+
+    assert_no_difference -> { ShorturlAccess.count } do
+      result = RedirectService.call(request: request, short_url_code: oversized_code)
+
+      assert_not result.success?
+      assert_nil result.resolved_target_url
+    end
+  end
 end

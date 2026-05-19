@@ -1,5 +1,5 @@
 class TargetUrlValidator < ActiveModel::EachValidator
-  SHORT_URL_PATH_PATTERN = %r{\A/s/[A-Za-z0-9]{1,15}\z}
+  SHORT_URL_PATH_PATTERN = %r{\A/[0-9A-Za-z]{1,15}\z}
   DEFAULT_SHORT_URL_HOSTS = %w[localhost 127.0.0.1 ::1].freeze
 
   def validate_each(record, attribute, value)

@@ -23,4 +23,12 @@ class ShorturlResolutionServiceTest < ActiveSupport::TestCase
       ShorturlResolutionService.call(short_url_code: missing_code)
     end
   end
+
+  test "raises not found when decoded short code is outside postgres bigint range" do
+    assert Base62.decode("z" * Base62::MAX_LENGTH) > ShorturlResolutionService::POSTGRES_BIGINT_MAX
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      ShorturlResolutionService.call(short_url_code: "z" * Base62::MAX_LENGTH)
+    end
+  end
 end

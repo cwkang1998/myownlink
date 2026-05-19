@@ -30,7 +30,7 @@ class ShorturlsTest < ApplicationSystemTestCase
     visit new_shorturl_path
 
     fill_in "Title", with: ""
-    fill_in "Target URL", with: "http://localhost/s/ABC123"
+    fill_in "Target URL", with: "http://localhost/ABC123"
     click_button "Create"
 
     assert_text "Unable to create short URL."

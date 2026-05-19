@@ -20,8 +20,14 @@ This is the wiki for [`myownl.ink`](https://myownl.ink).
 
 ## Limitations
 
+### Synchronous ShorturlAccess writes
+
+Currently, short url's accesses are persisted synchronously into database during the redirect flow (short URL -> target url). When someone visits a short URL, the handler will resolve the target URL, then persist a new access log to the database before completing the redirect.
+
+This will introduce additional latency to the redirection, given that the geolocation lookup API relies on 3rd party APIs and may take additional time to complete.
+
+As such, it might be better to immediately do the redirection as soon as the target URL is resolved, then dispatch background jobs to handle persisting the short url's access log. This will keep the redirect path fast whilst still recording access log to be collected.
+
 ### Geocoding API Rate Limits
 
 Currently the `geocoder`'s geocoding API is using a free default of `nominatim`, which limits to 1 request a second. This will become problematic when the amount of user scales up, and as such should be switched to a paid API with more limits in production deployment.
-
-## Scaling

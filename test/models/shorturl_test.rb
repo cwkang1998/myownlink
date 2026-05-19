@@ -18,15 +18,15 @@ class ShorturlTest < ActiveSupport::TestCase
     assert_not Shorturl.new(title: "CUSTOM", target_url: "custom://example.com/path").valid?
   end
 
-  test "target_url must not be this app short url" do
-    shorturl = Shorturl.new(title: "Loop", target_url: "http://localhost/s/ABC123")
+  test "target_url must not be this app root short url" do
+    shorturl = Shorturl.new(title: "Loop", target_url: "http://localhost/ABC123")
 
     assert_not shorturl.valid?
     assert_includes shorturl.errors[:target_url], "must not be another shortened URL"
   end
 
-  test "target_url allows similar path on other domains" do
-    shorturl = Shorturl.new(title: "External", target_url: "https://external.test/s/ABC123")
+  test "target_url allows similar root path on other domains" do
+    shorturl = Shorturl.new(title: "External", target_url: "https://external.test/ABC123")
 
     assert shorturl.valid?
   end
