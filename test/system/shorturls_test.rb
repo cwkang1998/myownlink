@@ -4,10 +4,14 @@ class ShorturlsTest < ApplicationSystemTestCase
   test "user views created shorturls on dashboard" do
     visit root_path
 
+    assert_text "Dashboard"
     assert_text "Fixture1"
     assert_text "https://example.com/one"
+    assert_text redirect_shorturl_url(shorturls(:one).short_url_code)
+    assert_no_selector "a[href='#{redirect_shorturl_path(shorturls(:one).short_url_code)}']"
     assert_text "Fixture2"
     assert_text "https://example.com/two"
+    assert_no_text "Total links"
     assert_link "Create short URL"
   end
 
@@ -16,6 +20,7 @@ class ShorturlsTest < ApplicationSystemTestCase
     target_url = "#{Capybara.current_session.server.base_url}/"
 
     visit new_shorturl_path
+    assert_text "Create short URL"
     fill_in "Target URL", with: target_url
     click_button "Create"
 
@@ -60,9 +65,14 @@ class ShorturlsTest < ApplicationSystemTestCase
     click_on "Fixture1"
 
     assert_current_path shorturl_path(shorturl)
+    assert_text "Short URL Details"
     assert_text shorturl.title
+    assert_text "Created #{shorturl.created_at.strftime("%Y-%m-%d")}"
     assert_text shorturl.target_url
     assert_text redirect_shorturl_url(shorturl.short_url_code)
+    assert_text "Visit time"
+    assert_text "Location"
+    assert_text shorturl_accesses(:one).timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
   end
 
   test "user visits a shorturl and is redirected to the target url" do

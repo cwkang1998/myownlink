@@ -1,5 +1,5 @@
 class ShorturlListService < ApplicationService
-  Result = Struct.new(:shorturls, :page, :page_size, :total_pages, :pagination_pages, :total_count, keyword_init: true)
+  Result = Struct.new(:shorturls, :page, :page_size, :total_pages, :pagination_pages, keyword_init: true)
 
   def initialize(page:, page_size:)
     @page = page
@@ -15,8 +15,7 @@ class ShorturlListService < ApplicationService
       page: pagination.page,
       page_size: pagination.page_size,
       total_pages: pagination.total_pages,
-      pagination_pages: pagination.visible_pages,
-      total_count: pagination.total_count
+      pagination_pages: pagination.visible_pages
     )
   end
 end

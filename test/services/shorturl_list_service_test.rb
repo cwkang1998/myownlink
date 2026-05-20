@@ -8,7 +8,6 @@ class ShorturlListServiceTest < ActiveSupport::TestCase
 
     assert_equal 2, result.page
     assert_equal 10, result.page_size
-    assert_equal Shorturl.count, result.total_count
     assert_equal (Shorturl.count.to_f / 10).ceil, result.total_pages
     assert_equal [ 1, 2, 3 ], result.pagination_pages
     assert_equal shorturls[10, 10], result.shorturls.to_a

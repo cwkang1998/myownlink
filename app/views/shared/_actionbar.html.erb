@@ -1,4 +1,5 @@
 <% variant = local_assigns.fetch(:variant, :primary) %>
+<% page_label = local_assigns[:page_label] %>
 <% headline = local_assigns[:headline] %>
 <% description = local_assigns[:description] %>
 <%
@@ -10,9 +11,9 @@
 <% button_classes =
   case variant.to_sym
   when :secondary
-    "inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-900 hover:bg-slate-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+    "inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-900 hover:bg-slate-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 sm:w-auto"
   else
-    "rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+    "inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:w-auto"
   end
 %>
 
@@ -20,6 +21,9 @@
 <div class="<%= wrapper_classes %>">
   <% if headline.present? %>
     <div class="max-w-2xl">
+      <% if page_label.present? %>
+        <p class="mb-2 text-sm font-semibold tracking-normal text-emerald-700"><%= page_label %></p>
+      <% end %>
       <h1 class="text-3xl font-semibold tracking-normal text-slate-950"><%= headline %></h1>
       <% if description.present? %>
         <p class="mt-2 text-sm leading-6 text-slate-600"><%= description %></p>

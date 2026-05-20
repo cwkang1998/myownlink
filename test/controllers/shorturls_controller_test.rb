@@ -2,15 +2,25 @@ require "test_helper"
 
 class ShorturlsControllerTest < ActionDispatch::IntegrationTest
   test "index renders dashboard with shorturls" do
+    shorturl = shorturls(:one)
+    short_url = redirect_shorturl_url(shorturl.short_url_code)
+
     get root_url
 
     assert_response :success
+    assert_select "title", text: "myownl.ink: Dashboard"
+    assert_select "h1", text: "Dashboard"
+    assert_select "p", text: "Total links", count: 0
     assert_select "li", count: shorturls.count
+    assert_select "a[href=?]", shorturl_path(shorturl), text: /#{Regexp.escape(shorturl.title)}/
+    assert_select "a[href=?]", short_url, count: 0
+    assert_select "p", text: short_url
   end
 
   test "index paginates shorturls with page and page_size" do
     paged_shorturls = 22.times.map do |index|
       Shorturl.create!(
+        id: 1_000_000_000 + index,
         title: "Paged Link #{index}",
         target_url: "https://example.com/paged-#{index}",
         created_at: (20 - index).days.from_now,
@@ -31,6 +41,7 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
   test "index renders first last adjacent pages and gaps for larger page sets" do
     90.times do |index|
       Shorturl.create!(
+        id: 1_000_100_000 + index,
         title: "Paged Link #{index}",
         target_url: "https://example.com/paged-#{index}",
         created_at: (index + 1).days.from_now,
@@ -55,6 +66,8 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
     get new_shorturl_url
 
     assert_response :success
+    assert_select "title", text: "myownl.ink: Create short URL"
+    assert_select "h1", text: "Create short URL"
     assert_select "form[action=?][method=?]", shorturls_path, "post"
     assert_select "input[name=?]", "shorturl[target_url]"
   end
@@ -98,13 +111,18 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
     get shorturl_url(shorturl)
 
     assert_response :success
+    assert_select "title", text: "myownl.ink: #{shorturl.title}"
+    assert_select "p", text: "Short URL Details"
+    assert_select "h1.text-3xl", text: shorturl.title
+    assert_select "p.mt-2.text-sm.leading-6.text-slate-600", text: "Created #{shorturl.created_at.strftime("%Y-%m-%d")}"
     assert_includes response.body, shorturl.title
     assert_includes response.body, shorturl.target_url
     assert_includes response.body, redirect_shorturl_url(shorturl.short_url_code)
     assert_select "#visitor_count", { text: "1" }
-    assert_select "th", text: "Timestamp"
-    assert_select "td", text: access.timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
-    assert_select "th", text: "Geolocation"
+    assert_select "th", text: "Visit time"
+    assert_select "p.font-medium.text-slate-900", text: access.timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
+    assert_select "p.text-xs.text-slate-500", text: /ago/
+    assert_select "th", text: "Location"
     assert_select "td", text: access.geolocation
   end
 
@@ -112,6 +130,7 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
     shorturl = shorturls(:one)
     paged_accesses = 22.times.map do |index|
       ShorturlAccess.create!(
+        id: 1_000_000_000 + index,
         shorturl: shorturl,
         timestamp: Time.zone.parse("2030-01-01 00:00:00 UTC") + (30 - index).days,
         geolocation: "Paged Visit #{index}"

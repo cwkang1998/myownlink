@@ -1,5 +1,4 @@
-<% content_for :title, "MyOwnLink Dashboard" %>
-<% content_for :page_title, "Dashboard" %>
+<% content_for :title, "Dashboard" %>
 
 <section class="w-full">
   <div class="mx-auto max-w-5xl">
@@ -14,22 +13,24 @@
         <ul class="divide-y divide-slate-200">
           <% @shorturls.each do |shorturl| %>
             <li>
-              <%= link_to shorturl_path(shorturl), class: "w-full flex justify-between block px-5 py-4 hover:bg-emerald-50" do %>
-              <div >
-                <p class="text-base font-medium text-slate-900"><%= shorturl.title %></p>
-                <p class="mt-1 truncate
-                 text-sm text-slate-500"><%= shorturl.target_url %></p>
+              <%= link_to shorturl_path(shorturl), class: "block px-5 py-4 hover:bg-emerald-50" do %>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="min-w-0">
+                    <p class="truncate text-base font-medium text-slate-900"><%= shorturl.title %></p>
+                    <p class="mt-1 truncate text-sm text-slate-500"><%= shorturl.target_url %></p>
+                  </div>
+
+                  <p class="truncate text-sm font-medium text-emerald-700"><%= full_short_url(shorturl) %></p>
                 </div>
-                <p class="mt-auto truncate
-                 text-sm text-emerald-700"><%= full_short_url(shorturl) %></p>
               <% end %>
             </li>
           <% end %>
         </ul>
       <% else %>
         <div class="px-5 py-12 text-center">
-          <p class="text-base font-medium text-slate-900">No short URLs yet</p>
-          <p class="mt-1 text-sm text-slate-500">Create one to see it listed here.</p>
+          <p class="text-lg font-semibold text-slate-900">Create your first short link</p>
+          <p class="mt-2 text-sm text-slate-500">Paste a target URL and start tracking visits.</p>
+          <%= link_to "Create short URL", new_shorturl_path, class: "mt-5 inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700" %>
         </div>
       <% end %>
 
