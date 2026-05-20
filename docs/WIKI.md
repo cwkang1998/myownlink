@@ -73,9 +73,9 @@ The target URL's title tag is currently fetched synchronously during short URL c
 
 A better production approach would be to create and return the short URL first, then fetch the title in a background job and update the record once the title is available.
 
-### Fetching of title tag fails for site with large HTML with current HTML size limit
+### Fetching of title tag fails for site with title that are dynamically determined
 
-A limit is set to the size of HTML that will be pulled to the backend. This is currently a fixed value and thus does not work for all sites, especially big sites with large HTML content. As such it might be more ideal to stream HTML in chunks and check for the title tags, rather than setting this fixed limit.
+For website that rely on client side javascript to load and determine the title of the site, our current approach fails to retrieve the title correctly and will fallback to the default. A solution for this is to use headless browsers like playwright or selenium to load the site and run the associated javascript which should result in the title being properly fetched. This is best implemented with asynchronous title fetching as it will take an even longer time to fetch the title.
 
 ### Short URL to target URL caching
 

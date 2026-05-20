@@ -1,6 +1,7 @@
 require "cgi"
 require "ipaddr"
 require "net/http"
+require "nokogiri"
 require "resolv"
 
 class TargetTitleExtractorService < ApplicationService
@@ -100,9 +101,10 @@ class TargetTitleExtractorService < ApplicationService
   def extract_title(body)
     return nil if body.blank?
 
-    match = body.match(%r{<title\b[^>]*>(.*?)</title>}im)
-    return nil unless match
+    document = Nokogiri::HTML(body)
+    title = document.at_css("title")&.text
+    return nil if title.blank?
 
-    CGI.unescapeHTML(match[1].gsub(/\s+/, " ").strip).presence
+    CGI.unescapeHTML(title.gsub(/\s+/, " ").strip).presence
   end
 end
