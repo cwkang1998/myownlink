@@ -4,7 +4,7 @@ require "net/http"
 require "resolv"
 
 class TargetTitleExtractorService < ApplicationService
-  MAX_RESPONSE_BYTES = 64 * 1024
+  MAX_RESPONSE_BYTES = 128 * 1024
   MAX_REDIRECTS = 3
   OPEN_TIMEOUT_SECONDS = 2
   READ_TIMEOUT_SECONDS = 2

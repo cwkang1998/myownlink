@@ -73,6 +73,10 @@ The target URL's title tag is currently fetched synchronously during short URL c
 
 A better production approach would be to create and return the short URL first, then fetch the title in a background job and update the record once the title is available.
 
+### Fetching of title tag fails for site with large HTML with current HTML size limit
+
+A limit is set to the size of HTML that will be pulled to the backend. This is currently a fixed value and thus does not work for all sites, especially big sites with large HTML content. As such it might be more ideal to stream HTML in chunks and check for the title tags, rather than setting this fixed limit.
+
 ### Short URL to target URL caching
 
 Short URL to target URL mappings are currently cached in memory. This works for a single application process, but it becomes less effective when the service scales horizontally because each process has its own cache. A distributed cache such as Solid Cache or Redis would make cached redirects available across instances.
