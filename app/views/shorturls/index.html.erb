@@ -10,12 +10,14 @@
         <ul class="divide-y divide-slate-200">
           <% @shorturls.each do |shorturl| %>
             <li>
-              <%= link_to shorturl_path(shorturl), class: "block px-5 py-4 hover:bg-emerald-50" do %>
-              <p class="text-base font-medium text-slate-900"><%= shorturl.title %></p>
-                <p class="mt-1 truncate
-                 text-sm text-emerald-700"><%= full_short_url(shorturl) %></p>
+              <%= link_to shorturl_path(shorturl), class: "w-full flex justify-between block px-5 py-4 hover:bg-emerald-50" do %>
+              <div >
+                <p class="text-base font-medium text-slate-900"><%= shorturl.title %></p>
                 <p class="mt-1 truncate
                  text-sm text-slate-500"><%= shorturl.target_url %></p>
+                </div>
+                <p class="mt-auto truncate
+                 text-sm text-emerald-700"><%= full_short_url(shorturl) %></p>
               <% end %>
             </li>
           <% end %>
