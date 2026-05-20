@@ -102,3 +102,10 @@ When short URL resolution fails, the application currently renders the default 4
 ### Reactive frontend
 
 The `show` page could be improved with a reactive frontend that updates the click count and access table as new visits arrive.
+
+
+### User, Authentication and Authorization
+
+The current implementation does not include user accounts, authentication, or authorization. All created short URLs are treated as public resources, and the dashboard/ report pages are accessible without login. However, it also means that anyone with access to the application can view the list of created short URLs and inspect their usage reports.
+
+For a production version, user ownership should be added to both short URLs and access reports. Users should only be able to manage and view reports for short URLs they created, while the public redirect endpoint should remain accessible without authentication.
