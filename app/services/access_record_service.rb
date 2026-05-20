@@ -1,12 +1,12 @@
 class AccessRecordService < ApplicationService
-  def initialize(shorturl:, request:)
-    @shorturl = shorturl
+  def initialize(shorturl_id:, request:)
+    @shorturl_id = shorturl_id
     @request = request
   end
 
   def call
     ShorturlAccess.create!(
-      shorturl: @shorturl,
+      shorturl_id: @shorturl_id,
       ip: ip_address,
       referer: @request.referer,
       timestamp: Time.current,

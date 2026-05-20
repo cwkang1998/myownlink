@@ -9,10 +9,10 @@ class RedirectService < ApplicationService
   def call
     target_url = nil
     ActiveRecord::Base.transaction do
-      shorturl = ShorturlResolutionService.call(short_url_code: @short_url_code)
-      target_url = shorturl.target_url
+      resolved_shorturl = ShorturlResolutionService.call(short_url_code: @short_url_code)
+      target_url = resolved_shorturl.target_url
 
-      AccessRecordService.call(shorturl: shorturl, request: @request)
+      AccessRecordService.call(shorturl_id: resolved_shorturl.shorturl_id, request: @request)
     end
     Result.new(success?: true, resolved_target_url: target_url)
 

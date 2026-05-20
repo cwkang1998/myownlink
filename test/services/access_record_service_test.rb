@@ -29,7 +29,7 @@ class AccessRecordServiceTest < ActiveSupport::TestCase
       ]) do
       access = nil
       assert_difference -> { ShorturlAccess.count }, 1 do
-        access = AccessRecordService.call(shorturl: shorturl, request: request)
+        access = AccessRecordService.call(shorturl_id: shorturl.id, request: request)
       end
 
       assert_equal shorturl, access.shorturl
@@ -45,7 +45,7 @@ class AccessRecordServiceTest < ActiveSupport::TestCase
     request = Request.new("198.51.100.25", "198.51.100.25", nil)
 
     with_geocoder_search("198.51.100.25", []) do
-      access = AccessRecordService.call(shorturl: shorturl, request: request)
+      access = AccessRecordService.call(shorturl_id: shorturl.id, request: request)
 
       assert_equal "Unknown", access.geolocation
     end
@@ -56,7 +56,7 @@ class AccessRecordServiceTest < ActiveSupport::TestCase
     request = Request.new("203.0.113.10", "203.0.113.10", nil)
 
     with_geocoder_error(Timeout::Error) do
-      access = AccessRecordService.call(shorturl: shorturl, request: request)
+      access = AccessRecordService.call(shorturl_id: shorturl.id, request: request)
 
       assert_equal "Unknown", access.geolocation
     end
@@ -67,7 +67,7 @@ class AccessRecordServiceTest < ActiveSupport::TestCase
 
     with_geocoder_search("203.0.113.10", []) do
       assert_no_difference -> { ShorturlAccess.count } do
-        assert_nil AccessRecordService.call(shorturl: Shorturl.new, request: request)
+        assert_nil AccessRecordService.call(shorturl_id: Shorturl.maximum(:id) + 1, request: request)
       end
     end
   end
