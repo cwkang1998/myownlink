@@ -1,4 +1,8 @@
+require "ipaddr"
+
 class AccessRecordService < ApplicationService
+  FORWARDED_FOR_HEADER = "X-Forwarded-For".freeze
+
   def initialize(shorturl_id:, request:)
     @shorturl_id = shorturl_id
     @request = request
@@ -34,6 +38,21 @@ class AccessRecordService < ApplicationService
   end
 
   def ip_address
-    @request.remote_ip.presence || @request.ip
+    forwarded_ip_address.presence || @request.remote_ip.presence || @request.ip
+  end
+
+  def forwarded_ip_address
+    return unless @request.respond_to?(:headers)
+
+    @request.headers[FORWARDED_FOR_HEADER].to_s.split(",").map(&:strip).find do |candidate|
+      valid_ip_address?(candidate)
+    end
+  end
+
+  def valid_ip_address?(value)
+    IPAddr.new(value)
+    true
+  rescue IPAddr::InvalidAddressError
+    false
   end
 end

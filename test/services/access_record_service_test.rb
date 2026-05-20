@@ -2,6 +2,7 @@ require "test_helper"
 
 class AccessRecordServiceTest < ActiveSupport::TestCase
   Request = Data.define(:remote_ip, :ip, :referer)
+  ForwardedRequest = Data.define(:remote_ip, :ip, :referer, :headers)
 
    setup do
     Geocoder.configure(lookup: :test, ip_lookup: :test, cache: nil)
@@ -48,6 +49,33 @@ class AccessRecordServiceTest < ActiveSupport::TestCase
       access = AccessRecordService.call(shorturl_id: shorturl.id, request: request)
 
       assert_equal "Unknown", access.geolocation
+    end
+  end
+
+  test "uses x-forwarded-for client ip when present" do
+    shorturl = shorturls(:one)
+    request = ForwardedRequest.new(
+      "44.238.0.1",
+      "44.238.0.1",
+      nil,
+      { "X-Forwarded-For" => "203.0.113.10, 44.238.0.1" }
+    )
+
+    with_geocoder_search(
+      "203.0.113.10",
+      [
+        {
+          "city" => "Kuala Lumpur",
+          "state_code" => "KUL",
+          "state" => nil,
+          "country" => "Malaysia",
+          "address" => "Kuala Lumpur, Malaysia"
+        }
+      ]) do
+      access = AccessRecordService.call(shorturl_id: shorturl.id, request: request)
+
+      assert_equal "203.0.113.10", access.ip
+      assert_equal "Kuala Lumpur, KUL, Malaysia", access.geolocation
     end
   end
 
