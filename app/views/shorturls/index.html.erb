@@ -3,7 +3,11 @@
 
 <section class="w-full">
   <div class="mx-auto max-w-5xl">
-    <%= render "shared/actionbar", text: "Create short URL", navigate_to: new_shorturl_url%>
+    <%= render "shared/actionbar",
+      headline: "Dashboard",
+      description: "Review your shortened links and open their visit reports.",
+      text: "Create short URL",
+      navigate_to: new_shorturl_url %>
 
     <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <% if @shorturls.present? %>

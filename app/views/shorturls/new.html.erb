@@ -4,7 +4,12 @@
 
 <section class="w-full">
   <div class="mx-auto max-w-3xl">
-    <%= render "shared/actionbar", text: "Back to Dashboard", navigate_to: root_path, variant: :secondary %>
+    <%= render "shared/actionbar",
+      headline: "Create short URL",
+      description: "Paste a target URL and we will create a shareable short link for you.",
+      text: "Back to Dashboard",
+      navigate_to: root_path,
+      variant: :secondary %>
 
     <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <% if shorturl.errors.any? %>

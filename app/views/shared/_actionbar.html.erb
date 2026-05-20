@@ -1,5 +1,11 @@
 <% variant = local_assigns.fetch(:variant, :primary) %>
-<% wrapper_classes = local_assigns.fetch(:wrapper_classes, "mb-8 flex justify-end") %>
+<% headline = local_assigns[:headline] %>
+<% description = local_assigns[:description] %>
+<%
+  wrapper_classes = local_assigns.fetch(:wrapper_classes) do
+    headline.present? ? "mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" : "mb-8 flex justify-end"
+  end
+%>
 
 <% button_classes =
   case variant.to_sym
@@ -12,6 +18,15 @@
 
 
 <div class="<%= wrapper_classes %>">
+  <% if headline.present? %>
+    <div class="max-w-2xl">
+      <h1 class="text-3xl font-semibold tracking-normal text-slate-950"><%= headline %></h1>
+      <% if description.present? %>
+        <p class="mt-2 text-sm leading-6 text-slate-600"><%= description %></p>
+      <% end %>
+    </div>
+  <% end %>
+
   <%= link_to navigate_to, class: button_classes do %>
     <% if variant.to_sym == :secondary %>
       <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
