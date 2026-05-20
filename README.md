@@ -86,7 +86,12 @@ The CI script runs setup, RuboCop, bundler-audit, importmap audit, Brakeman, Rai
 
 ## Deployment
 
-> TBD
+Currently the full stack of the application is hosted on [render.com](https://render.com), which includes:
+
+- The Rails application
+- The PostgreSQL database
+
+The application will be deployed automatically when code is pushed to the `main` branch.
 
 ## Documentation
 
