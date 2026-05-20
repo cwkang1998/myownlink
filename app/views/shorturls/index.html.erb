@@ -26,6 +26,13 @@
           <p class="mt-1 text-sm text-slate-500">Create one to see it listed here.</p>
         </div>
       <% end %>
+
+      <%= render "shared/pagination",
+        current_page: @page,
+        total_pages: @total_pages,
+        page_size: @page_size,
+        pages: @pagination_pages,
+        path_for_page: ->(page_number) { root_path(page: page_number, page_size: @page_size) } %>
     </div>
   </div>
 </section>

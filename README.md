@@ -21,11 +21,12 @@ Install Ruby 3.4.9 first, then install the project dependencies:
 bundle install
 ```
 
-Prepare the database:
+Prepare the local database:
 
 ```sh
 docker compose -f docker-compose.local.yml up -d postgres
 bin/rails db:prepare
+bin/rails db:migrate
 ```
 
 Start the development server:
@@ -55,14 +56,51 @@ POSTGRES_DB=myownlink_development
 POSTGRES_TEST_DB=myownlink_test
 ```
 
-Production deployment requires `DATABASE_URL` and a valid Rails master key:
+Production deployment requires similar configs, a valid Rails master key, `APP_HOST` and `RAILS_ENV=production`:
 
 ```sh
-DATABASE_URL=postgres://user:password@host:5432/myownlink_production
+RAILS_ENV=production
+POSTGRES_HOST=db.production_host.com
+POSTGRES_PORT=5432
+POSTGRES_USER=myownlink
+POSTGRES_PASSWORD=production_password
+POSTGRES_DB=myownlink_production
+APP_HOST=myownl.ink
 RAILS_MASTER_KEY=your_master_key
 ```
 
+Optional production settings:
+
+```text
+RAILS_LOG_LEVEL=info
+RAILS_MAX_THREADS=5
+POSTGRES_CACHE_DB=myownlink_production_cache
+POSTGRES_QUEUE_DB=myownlink_production_queue
+POSTGRES_CABLE_DB=myownlink_production_cable
+```
+
+Configure separate Solid Cache, Solid Queue, and Solid Cable databases only if the deployment uses separate databases for those roles.
+
+### Docker Compose Files
+
+| File | Purpose |
+| --- | --- |
+| `docker-compose.local.yml` | Starts the development PostgreSQL database used by `bin/rails db:prepare` and `bin/dev`. |
+| `docker-compose.test.yml` | Starts the test PostgreSQL database used by `bin/rails test` and `bin/rails test:system`. |
+
 ## Testing
+
+Before running the test, make sure to have your testing database up and running. This can be done as such:
+
+```sh
+docker compose -f docker-compose.test.yml up -d postgres --wait
+```
+
+For a first run, or after schema changes, prepare the test database:
+
+```sh
+bin/rails db:test:prepare
+```
 
 Run the Rails test suite:
 
@@ -84,6 +122,26 @@ bin/ci
 
 The CI script runs setup, RuboCop, bundler-audit, importmap audit, Brakeman, Rails tests, and seed validation.
 
+Tests default to a single worker locally, mainly due to pg segfaults. To opt into parallel test workers:
+
+```sh
+PARALLEL_WORKERS=4 bin/rails test
+```
+
+> Note: if you want a fresh run of the test with a new test database, you can do `docker compose -f docker-compose.test.yml down -v` to remove the volume associated.
+
+## Common Commands
+
+```sh
+bin/rails db:prepare
+bin/rails db:test:prepare
+bin/rails test
+bin/rails test:system
+bin/rubocop
+bin/brakeman --quiet
+bin/ci
+```
+
 ## Deployment
 
 Currently the full stack of the application is hosted on [render.com](https://render.com), which includes:
@@ -92,6 +150,12 @@ Currently the full stack of the application is hosted on [render.com](https://re
 - The PostgreSQL database
 
 The application will be deployed automatically when code is pushed to the `main` branch.
+
+Database migrations are not assumed to run automatically. If the deployment platform does not run migrations as part of its deploy command, run:
+
+```sh
+bin/rails db:migrate
+```
 
 ## Documentation
 

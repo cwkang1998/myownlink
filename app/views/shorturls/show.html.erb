@@ -3,8 +3,6 @@
 
 <%
   short_url = full_short_url(@shorturl)
-  shorturl_accesses = ShorturlAccess.where(shorturl_id: @shorturl.id).order(timestamp: :desc, created_at: :desc)
-  visitor_count = shorturl_accesses.count
 %>
 
 <section class="w-full">
@@ -24,7 +22,7 @@
 
       <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-6 text-center">
         <p class="text-sm font-medium text-emerald-700">Clicks</p>
-        <p id="vistor_count" class="mt-2 text-5xl font-semibold text-slate-900"><%= visitor_count %></p>
+        <p id="visitor_count" class="mt-2 text-5xl font-semibold text-slate-900"><%= @visitor_count %></p>
       </div>
     </div>
 
@@ -33,7 +31,7 @@
         <h2 class="text-lg font-semibold text-slate-900">Visits</h2>
       </div>
 
-      <% if shorturl_accesses.present? %>
+      <% if @shorturl_accesses.present? %>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
             <thead class="bg-slate-50 text-slate-600">
@@ -43,7 +41,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
-              <% shorturl_accesses.each do |access| %>
+              <% @shorturl_accesses.each do |access| %>
               
                 <% accessed_at = access.timestamp || access.created_at %>
                 <tr>
@@ -60,10 +58,17 @@
         </div>
       <% else %>
         <div class="px-5 py-12 text-center">
-          <p class="text-base font-medium text-slate-900">No access records yet</p>
+          <p class="text-base font-medium text-slate-900">No visit records yet</p>
           <p class="mt-1 text-sm text-slate-500">Visitor details will appear after the short URL is opened.</p>
         </div>
       <% end %>
+
+      <%= render "shared/pagination",
+        current_page: @page,
+        total_pages: @total_pages,
+        page_size: @page_size,
+        pages: @pagination_pages,
+        path_for_page: ->(page_number) { shorturl_path(@shorturl, page: page_number, page_size: @page_size) } %>
     </div>
   </div>
 </section>

@@ -1,6 +1,15 @@
 class ShorturlsController < ApplicationController
+  DEFAULT_PAGE_SIZE = 10
+  ALLOWED_PAGE_SIZE = [ 10, 25, 50 ].freeze
+
   def index
-    @shorturls = Shorturl.order(created_at: :desc).all
+    result = ShorturlListService.call(page: page_param, page_size: page_size_param)
+
+    @page = result.page
+    @page_size = result.page_size
+    @total_pages = result.total_pages
+    @pagination_pages = result.pagination_pages
+    @shorturls = result.shorturls
   end
 
   def new
@@ -19,7 +28,17 @@ class ShorturlsController < ApplicationController
   end
 
   def show
-    @shorturl = Shorturl.find(params[:id])
+    result = AccessListService.call(shorturl_id: params[:id], page: page_param, page_size: page_size_param)
+
+    return render_404 unless result.success?
+
+    @shorturl = result.shorturl
+    @page = result.page
+    @page_size = result.page_size
+    @visitor_count = result.visitor_count
+    @total_pages = result.total_pages
+    @pagination_pages = result.pagination_pages
+    @shorturl_accesses = result.shorturl_accesses
   end
 
   def redirect_shorturl
@@ -31,6 +50,20 @@ class ShorturlsController < ApplicationController
   end
 
   private
+
+  def page_param
+    requested_page = Integer(params.fetch(:page, 1), exception: false)
+
+    requested_page.present? && requested_page.positive? ? requested_page : 1
+  end
+
+  def page_size_param
+    requested_page_size = Integer(params.fetch(:page_size, DEFAULT_PAGE_SIZE), exception: false)
+
+    return DEFAULT_PAGE_SIZE unless ALLOWED_PAGE_SIZE.include?(requested_page_size)
+
+    requested_page_size
+  end
 
   def create_params
     params.require(:shorturl).permit(:title, :target_url)
