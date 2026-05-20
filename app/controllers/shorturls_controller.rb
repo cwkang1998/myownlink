@@ -66,7 +66,7 @@ class ShorturlsController < ApplicationController
   end
 
   def create_params
-    params.require(:shorturl).permit(:title, :target_url)
+    params.require(:shorturl).permit(:target_url)
   end
 
   def render_404

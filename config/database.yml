@@ -22,7 +22,6 @@ production:
   primary:
     <<: *default
     database: <%= ENV.fetch("POSTGRES_DB", "myownlink_production") %>
-    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *default
     database: <%= ENV.fetch("POSTGRES_CACHE_DB", "myownlink_production_cache") %>

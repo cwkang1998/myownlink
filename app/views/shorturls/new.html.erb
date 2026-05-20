@@ -20,18 +20,6 @@
 
       <%= form_with model: shorturl, url: shorturls_path, method: :post, scope: :shorturl, class: "space-y-6" do |form| %>
         <div>
-          <%= form.label :title, "Title", class: "block text-sm font-medium text-slate-700" %>
-          <%= form.text_field :title,
-            placeholder: "CoinGecko",
-            autocomplete: "off",
-            aria: { invalid: shorturl.errors[:title].any? },
-            class: "mt-2 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" %>
-          <% shorturl.errors.full_messages_for(:title).each do |message| %>
-            <p class="mt-2 text-sm text-red-700"><%= message %></p>
-          <% end %>
-        </div>
-
-        <div>
           <%= form.label :target_url, "Target URL", class: "block text-sm font-medium text-slate-700" %>
           <%= form.url_field :target_url,
             placeholder: "https://www.coingecko.com",

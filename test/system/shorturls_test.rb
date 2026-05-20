@@ -12,18 +12,20 @@ class ShorturlsTest < ApplicationSystemTestCase
   end
 
   test "user creates a shorturl and sees the details page" do
-    visit new_shorturl_path
+    with_target_title("CoinGecko Crypto Prices") do
+      visit new_shorturl_path
 
-    fill_in "Title", with: "CoinGecko"
-    fill_in "Target URL", with: "https://www.coingecko.com"
-    click_button "Create"
+      fill_in "Title", with: "CoinGecko"
+      fill_in "Target URL", with: "https://www.coingecko.com"
+      click_button "Create"
 
-    assert_text "CoinGecko"
-    assert_text "https://www.coingecko.com"
+      assert_text "CoinGecko Crypto Prices"
+      assert_text "https://www.coingecko.com"
 
-    shorturl = Shorturl.find_by!(title: "CoinGecko")
-    assert_current_path shorturl_path(shorturl)
-    assert_text redirect_shorturl_url(shorturl.short_url_code)
+      shorturl = Shorturl.find_by!(title: "CoinGecko Crypto Prices")
+      assert_current_path shorturl_path(shorturl)
+      assert_text redirect_shorturl_url(shorturl.short_url_code)
+    end
   end
 
   test "user sees validation errors when creation fails" do
@@ -48,5 +50,21 @@ class ShorturlsTest < ApplicationSystemTestCase
     assert_text shorturl.title
     assert_text shorturl.target_url
     assert_text redirect_shorturl_url(shorturl.short_url_code)
+  end
+
+  private
+
+  def with_target_title(title)
+    original_call = TargetTitleExtractorService.method(:call)
+
+    TargetTitleExtractorService.define_singleton_method(:call) do |**_kwargs|
+      title
+    end
+
+    yield
+  ensure
+    TargetTitleExtractorService.define_singleton_method(:call) do |*args, **kwargs|
+      original_call.call(*args, **kwargs)
+    end
   end
 end

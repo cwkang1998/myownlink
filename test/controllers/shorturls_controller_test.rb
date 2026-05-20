@@ -56,21 +56,24 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "form[action=?][method=?]", shorturls_path, "post"
-    assert_select "input[name=?]", "shorturl[title]"
     assert_select "input[name=?]", "shorturl[target_url]"
   end
 
   test "create persists shorturl and redirects to details" do
-    assert_difference -> { Shorturl.count }, 1 do
-      post shorturls_url, params: {
-        shorturl: {
-          title: "CoinGecko",
-          target_url: "https://www.coingecko.com"
+    with_target_title("CoinGecko Crypto Prices") do
+      assert_difference -> { Shorturl.count }, 1 do
+        post shorturls_url, params: {
+          shorturl: {
+            title: "CoinGecko",
+            target_url: "https://www.coingecko.com"
+          }
         }
-      }
+      end
     end
 
-    assert_redirected_to shorturl_url(Shorturl.order(:created_at).last)
+    shorturl = Shorturl.order(:created_at).last
+    assert_equal "CoinGecko Crypto Prices", shorturl.title
+    assert_redirected_to shorturl_url(shorturl)
   end
 
   test "create renders validation errors for invalid params" do
@@ -85,7 +88,6 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_select ".text-red-700", text: /Unable to create short URL/
-    assert_select ".text-red-700", text: /Title can't be blank/
     assert_select ".text-red-700", text: /Target url must be a valid URL/
   end
 
@@ -159,5 +161,21 @@ class ShorturlsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :not_found
+  end
+
+  private
+
+  def with_target_title(title)
+    original_call = TargetTitleExtractorService.method(:call)
+
+    TargetTitleExtractorService.define_singleton_method(:call) do |**_kwargs|
+      title
+    end
+
+    yield
+  ensure
+    TargetTitleExtractorService.define_singleton_method(:call) do |*args, **kwargs|
+      original_call.call(*args, **kwargs)
+    end
   end
 end
