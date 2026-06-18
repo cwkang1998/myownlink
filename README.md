@@ -4,6 +4,8 @@ Myownlink is a url shortener service intended to accept a target URL, generate a
 
 The application is currently deployed at [`myownl.ink`](https://myownl.ink).
 
+> P.S. It is currently offline and no longer hosted here.
+
 ## Dependencies
 
 - Ruby 3.4.9
